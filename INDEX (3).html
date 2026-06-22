@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathGuide: Ондық бөлшектер / Десятичные дроби</title>
+    <style>
+        /* === ПЕРЕМЕННЫЕ И БАЗОВЫЕ СТИЛИ (ACADEMIC THEME №5) === */
+        :root {
+            --primary-color: #1e293b; /* Грифельно-синий */
+            --accent-color: #0ea5e9;  /* Небесно-голубой */
+            --bg-color: #f8fafc;      /* Светлый фон бумаги */
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --success-color: #10b981; /* Мягкий зеленый */
+            --error-color: #ef4444;   /* Мягкий красный */
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* === ШАПКА И НАВИГАЦИЯ === */
+        .header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header__title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header__subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .nav__lang-switch, .nav__actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            background-color: #edf2f7;
+            border: 1px solid #cbd5e1;
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn--active {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+        }
+
+        .btn--primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn--primary:hover {
+            background-color: #0f172a;
+        }
+
+        /* === ОСНОВНОЙ КОНТЕНТ === */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .section__title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 0.75rem;
+        }
+
+        /* Теги */
+        .tag {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0.2rem;
+        }
+
+        /* Сетка теории */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+        }
+
+        .card__title {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* === СТИЛИ ФОРМУЛ И РАЗБОРА === */
+        .formula-block {
+            background: #fff;
+            border: 1px dashed var(--accent-color);
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .math-table {
+            margin: 1rem auto;
+            border-collapse: collapse;
+            font-family: monospace;
+            font-size: 1.3rem;
+        }
+        .math-table td {
+            padding: 0.1rem 0.4rem;
+            text-align: center;
+        }
+        .math-table .comma {
+            color: var(--error-color);
+            font-weight: bold;
+        }
+        .math-table .border-top {
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .highlight-ins {
+            background-color: #fef08a;
+            text-decoration: none;
+            padding: 0 2px;
+            border-bottom: 2px solid #eab308;
+        }
+
+        /* === ЛАБОРАТОРИЯ (ДИНАМИЧЕСКИЙ SVG) === */
+        .lab-control {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .slider-group label {
+            font-weight: 500;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .slider-container input {
+            flex: 1;
+            accent-color: var(--accent-color);
+        }
+        .slider-value {
+            font-weight: bold;
+            min-width: 40px;
+        }
+
+        .visual-box {
+            background: #f1f5f9;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* === ТРЕНАЖЕР === */
+        .quiz-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+        }
+        .quiz-item:last-child {
+            border-bottom: none;
+        }
+        .quiz-question {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+        .quiz-control {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .input-answer {
+            padding: 0.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            width: 120px;
+            font-size: 1rem;
+        }
+        .input-answer:focus {
+            outline: 2px solid var(--accent-color);
+        }
+        .feedback {
+            margin-top: 0.5rem;
+            font-weight: 500;
+            display: none;
+        }
+        .feedback--success { color: var(--success-color); display: block; }
+        .feedback--error { color: var(--error-color); display: block; }
+
+        /* === ЛОВУШКИ И ЛАЙФХАКИ (ASIDE) === */
+        .aside-warning {
+            background-color: #fff7ed;
+            border: 1px solid #ffedd5;
+            border-left: 4px solid #f97316;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+
+        /* === ПОДВАЛ === */
+        .footer {
+            background-color: var(--primary-color);
+            color: #94a3b8;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+        /* === CSS MEDIA PRINT (АДАПТИВНАЯ ПЕЧАТЬ) === */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .nav, .btn, .nav__lang-switch, .lab-control, .quiz-control, .feedback {
+                display: none !important;
+            }
+            .section {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-bottom: 3cm;
+                page-break-inside: avoid;
+            }
+            .section__title {
+                border-left: 2px solid black;
+                color: black;
+            }
+            .visual-box {
+                background: none;
+                border: 1px solid #ccc;
+            }
+            .input-answer {
+                border-bottom: 1px solid black !important;
+                border-top: none !important;
+                border-left: none !important;
+                border-right: none !important;
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav__lang-switch">
+            <button class="btn btn--active" onclick="switchLang('kk')" id="btn-kk">🇰🇿 Қазақша</button>
+            <button class="btn" onclick="switchLang('ru')" id="btn-ru">🇷🇺 Русский</button>
+        </div>
+        <div class="nav__actions">
+            <button class="btn btn--primary" onclick="window.print()" data-i18n="printBtn">🖨️ Скачать PDF / Печать</button>
+        </div>
+    </nav>
+
+    <header class="header">
+        <h1 class="header__title" id="main-title" data-i18n="title">Ондық бөлшектерді қосу және азайту</h1>
+        <p class="header__subtitle" id="main-subtitle" data-i18n="subtitle">5-сыныпқа арналған интерактивті көрнекі құрал</p>
+    </header>
+
+    <main class="container">
+
+        <section class="section">
+            <h2 class="section__title" data-i18n="introTitle">1. Бұл не үшін керек? (Өмірмен байланыс)</h2>
+            <p data-i18n="introText">
+                Күнделікті өмірде біз бүтін сандармен ғана жұмыс істемейміз. Дүкендегі бағалар, автожарыстағы секундтар, дене температурасы — мұның бәрі ондық бөлшектер. Оларды дұрыс қосып, азайта білу өте маңызды!
+            </p>
+            <div style="margin-top: 1rem;">
+                <span class="tag" data-i18n="tag1">🛒 Дүкендегі есептеулер</span>
+                <span class="tag" data-i18n="tag2">📏 Дәл өлшемдер</span>
+                <span class="tag" data-i18n="tag3">⏱️ Спорттық нәтижелер</span>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section__title" data-i18n="theoryTitle">2. Басты ереже: Үтірдің астына үтір!</h2>
+            <p data-i18n="theoryIntro">Ондық бөлшектерді қосу және азайту кәдімгі разрядтар бойынша орындалады. Ең басты шарт:</p>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card__title">1-қадам</h3>
+                    <p data-i18n="step1">Бөлшектердің үтірден кейінгі цифрларының санын нөлдерді тіркеп жазу арқылы теңестіріңіз.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">2-қадам</h3>
+                    <p data-i18n="step2">Үтір үтірдің астында, бірлік бірліктің астында болатындай етіп бағандап жазыңыз.</p>
+                </div>
+                <div class="card">
+                    <h3 class="card__title">3-қадам</h3>
+                    <p data-i18n="step3">Үтірге назар аудармай, амалды орындаңыз. Жауапта үтірді өз орнына (тура астына) қойыңыз.</p>
+                </div>
+            </div>
+
+            <div class="formula-block">
+                <h4 style="margin-bottom:0.5rem;" data-i18n="mathMLTitle">Натывты MathML құрылымы:</h4>
+                <math xmlns="http://www.w3.org/1999/xhtml" display="block">
+                    <mover>
+                        <mrow>
+                            <mn>4</mn>
+                            <mo>,</mo>
+                            <mn>2</mn>
+                            <mn>0</mn>
+                        </mrow>
+                        <mo>⎴</mo>
+                    </mover>
+                    <mo>+</mo>
+                    <mover>
+                        <mrow>
+                            <mn>1</mn>
+                            <mo>,</mo>
+                            <mn>3</mn>
+                            <mn>5</mn>
+                        </mrow>
+                        <mo>⎴</mo>
+                    </mover>
+                    <mo>=</mo>
+                    <mn>5</mn>
+                    <mo>,</mo>
+                    <mn>5</mn>
+                    <mn>5</mn>
+                </math>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section__title" data-i18n="labTitle">3. Интерактивті зертхана (Көрнекі модель)</h2>
+            <p style="margin-bottom: 1rem;" data-i18n="labDesc">Жүгірткілерді жылжытып, екі бөлшектің қосындысы геометриялық түрде (жүздік квадраттарда) қалай бейнеленетінін көріңіз.</p>
+            
+            <div class="lab-control">
+                <div class="slider-group">
+                    <label for="sliderA" data-i18n="labelA">Бірінші сан (A):</label>
+                    <div class="slider-container">
+                        <input type="range" id="sliderA" min="0" max="0.9" step="0.1" value="0.4">
+                        <span class="slider-value" id="valA">0.4</span>
+                    </div>
+                </div>
+                <div class="slider-group">
+                    <label for="sliderB" data-i18n="labelB">Екінші сан (B):</label>
+                    <div class="slider-container">
+                        <input type="range" id="sliderB" min="0" max="0.9" step="0.1" value="0.3">
+                        <span class="slider-value" id="valB">0.3</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visual-box">
+                <svg id="mathSvg" width="300" height="150" style="border: 1px solid #cbd5e1; background: white;"></svg>
+                <div style="margin-top:1rem; font-size:1.2rem; font-weight:bold;">
+                    <span id="equationText">0.4 + 0.3 = 0.7</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section__title" data-i18n="examplesTitle">4. Бағандап есептеу мысалдары</h2>
+            <p data-i18n="examplesDesc">Нөлдерді тіркеп жазудың маңыздылығына назар аударыңыз:</p>
+            
+            <div class="grid">
+                <div class="card" style="border-top: 4px solid var(--success-color);">
+                    <h4 data-i18n="ex1Title">Мысал 1: Қосу (5.2 + 1.48)</h4>
+                    <p data-i18n="ex1Desc">5.2-ге нөл қосып, 5.20 қыламыз:</p>
+                    <table class="math-table">
+                        <tr><td></td><td>5</td><td class="comma">,</td><td>2</td><td><ins class="highlight-ins">0</ins></td></tr>
+                        <tr><td>+</td><td>1</td><td class="comma">,</td><td>4</td><td>8</td></tr>
+                        <tr class="border-top"><td></td><td>6</td><td class="comma">,</td><td>6</td><td>8</td></tr>
+                    </table>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--accent-color);">
+                    <h4 data-i18n="ex2Title">Мысал 2: Азайту (7 - 2.35)</h4>
+                    <p data-i18n="ex2Desc">7 бүтін санын 7.00 деп жазамыз:</p>
+                    <table class="math-table">
+                        <tr><td></td><td>7</td><td class="comma">,</td><td><ins class="highlight-ins">0</ins></td><td><ins class="highlight-ins">0</ins></td></tr>
+                        <tr><td>-</td><td>2</td><td class="comma">,</td><td>3</td><td>5</td></tr>
+                        <tr class="border-top"><td></td><td>4</td><td class="comma">,</td><td>6</td><td>5</td></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <aside class="aside-warning">
+            <h3 style="color:#c2410c; margin-bottom:0.5rem;" data-i18n="pitfallTitle">⚠️ Жиі кездесетін қателік (Ловушка!)</h3>
+            <p data-i18n="pitfallText">Үтірлерді теңестірмей қосуға ТЫЙЫМ САЛЫНАДЫ. Мысалы, 2.3 + 0.12 амалын орындағанда 2.35 деп жазу — үлкен қателік. Дұрысы: 2.30 + 0.12 = 2.42.</p>
+        </aside>
+
+        <section class="section">
+            <h2 class="section__title" data-i18n="quizTitle">5. Интерактивті тренажер (10 тапсырма)</h2>
+            <p style="margin-bottom: 1.5rem;" data-i18n="quizDesc">Жауаптарды ондық бөлшек түрінде енгізіңіз (мысалы: 1.5 немесе 0.75). Үтір мен нүктенің екеуі де қабылданады.</p>
+            
+            <div id="quiz-container">
+                </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section__title" data-i18n="summaryTitle">6. Қорытынды</h2>
+            <ul style="margin-left: 1.5rem;" id="summary-list">
+                </ul>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>© 2026 MathGuide. Инклюзивті және цифрлық білім беру ортасы.</p>
+    </footer>
+
+    <script>
+        // БАЗА ДАННЫХ ДЛЯ ДВУХ ЯЗЫКОВ
+        const translations = {
+            kk: {
+                title: "Ондық бөлшектерді қосу және азайту",
+                subtitle: "5-сыныпқа арналған интерактивті көрнекі құрал",
+                printBtn: "🖨️ PDF жүктеу / Басып шығару",
+                introTitle: "1. Бұл не үшін керек? (Өмірмен байланыс)",
+                introText: "Күнделікті өмірде біз бүтін сандармен ғана жұмыс істемейміз. Дүкендегі бағалар, автожарыстағы секундтар, дене температурасы — мұның бәрі ондық бөлшектер. Оларды дұрыс қосып, азайта білу өте маңызды!",
+                tag1: "🛒 Дүкендегі есептеулер",
+                tag2: "📏 Дәл өлшемдер",
+                tag3: "⏱️ Спорттық нәтижелер",
+                theoryTitle: "2. Басты ереже: Үтірдің астына үтір!",
+                theoryIntro: "Ондық бөлшектерді қосу және азайту кәдімгі разрядтар бойынша орындалады. Ең басты шарт:",
+                step1: "Бөлшектердің үтірден кейінгі цифрларының санын нөлдерді тіркеп жазу арқылы теңестіріңіз.",
+                step2: "Үтір үтірдің астында, бірлік бірліктің астында болатындай етіп бағандап жазыңыз.",
+                step3: "Үтірге назар аудармай, амалды орындаңыз. Жауапта үтірді өз орнына (тура астына) қойыңыз.",
+                mathMLTitle: "Нативті MathML құрылымы:",
+                labTitle: "3. Интерактивті зертхана (Көрнекі модель)",
+                labDesc: "Жүгірткілерді жылжытып, екі бөлшектің қосындысы геометриялық түрде (квадраттарда) қалай бейнеленетінін көріңіз.",
+                labelA: "Бірінші сан (A):",
+                labelB: "Екінші сан (B):",
+                examplesTitle: "4. Бағандап есептеу мысалдары",
+                examplesDesc: "Нөлдерді тіркеп жазудың маңыздылығына назар аударыңыз:",
+                ex1Title: "Мысал 1: Қосу (5.2 + 1.48)",
+                ex1Desc: "5.2-ге нөл қосып, 5.20 қыламыз:",
+                ex2Title: "Мысал 2: Азайту (7 - 2.35)",
+                ex2Desc: "7 бүтін санын 7.00 деп жазамыз:",
+                pitfallTitle: "⚠️ Жиі кездесетін қателік (Ловушка!)",
+                pitfallText: "Үтірлерді теңестірмей қосуға ТЫЙЫМ САЛЫНАДЫ. Мысалы, 2.3 + 0.12 амалын орындағанда 2.35 деп жазу — үлкен қателік. Дұрысы: 2.30 + 0.12 = 2.42.",
+                quizTitle: "5. Интерактивті тренажер (10 тапсырма)",
+                quizDesc: "Жауаптарды ондық бөлшек түрінде енгізіңіз. Үтір мен нүктенің екеуі де қабылданады.",
+                quizCheck: "Тексеру",
+                correct: "Дұрыс! Жарайсың! 🎉",
+                incorrect: "Қате. Қайтадан ойланып көр. 💡 Сұрақ белгісін басып көмек ал.",
+                summaryTitle: "6. Қорытынды",
+                summaryItems: [
+                    "Қосу мен азайту кезінде ең бастысы — үтірді үтірдің астына қою.",
+                    "Бөлшек бөлігіндегі цифрлар саны әртүрлі болса, соңына нөлдерді жалғаймыз.",
+                    "Натурал санның соңында әрқашан көрінбейтін үтір мен шексіз нөлдер бар деп есептейміз (7 = 7.00)."
+                ],
+                questions: [
+                    { q: "1) Есептеңіз: 0.3 + 0.4", a: ["0.7", "0,7"], h: "Үтірге назар аудармай қос: 3 + 4 = 7, сосын үтірді қайтар." },
+                    { q: "2) Есептеңіз: 1.2 + 0.35", a: ["1.55", "1,55"], h: "1.2-ні 1.20 деп жазып ал." },
+                    { q: "3) Есептеңіз: 5.7 - 2.3", a: ["3.4", "3,4"], h: "7-ден 3-ті азайт, 5-тен 2-ні азайт." },
+                    { q: "4) Есептеңіз: 4 - 1.5", a: ["2.5", "2,5"], h: "4 санын 4.0 деп жазып, 1.5-ті азайт." },
+                    { q: "5) Есептеңіз: 0.85 - 0.2", a: ["0.65", "0,65"], h: "0.2-ні 0.20-ға айналдыр." },
+                    { q: "6) Шоппинг: Дәптер 120.5 теңге, қалам 45.25 теңге. Барлығы қанша?", a: ["165.75", "165,75"], h: "120.50 + 45.25 қосындысын есепте." },
+                    { q: "7) Бойы: Әлияның бойы 1.35 м, ал інісі одан 0.12 м кіші. Інісінің бойы қандай?", a: ["1.23", "1,23"], h: "Азайтуды орында: 1.35 - 0.12" },
+                    { q: "8) Есептеңіз: 10 + 2.56", a: ["12.56", "12,56"], h: "10 санын 10.00 деп елестет." },
+                    { q: "9) Есептеңіз: 0.03 + 0.17", a: ["0.2", "0,2", "0.20", "0,20"], h: "3 + 17 = 20, соңындағы нөлді алып тастауға болады." },
+                    { q: "10) Логика: Саннан 1.5-ті азайтқанда 3.5 шықты. Бұл қандай сан?", a: ["5", "5.0", "5,0"], h: "Кері амал қолдан: 3.5-ке 1.5-ті қос." }
+                ]
+            },
+            ru: {
+                title: "Сложение и вычитание десятичных дробей",
+                subtitle: "Интерактивное наглядное пособие для 5 класса",
+                printBtn: "🖨️ Скачать PDF / Печать",
+                introTitle: "1. Зачем это нужно? (Связь с жизнью)",
+                introText: "В реальной жизни мы редко сталкиваемся только с целыми числами. Цены в магазинах, секунды на автогонках, температура тела — всё это десятичные дроби. Уметь их складывать и вычитать жизненно важно!",
+                tag1: "🛒 Расчеты в магазине",
+                tag2: "📏 Точные измерения",
+                tag3: "⏱️ Спортивные результаты",
+                theoryTitle: "2. Главное правило: Запятая под запятой!",
+                theoryIntro: "Сложение и вычитание десятичных дробей выполняется поразрядно. Главное условие:",
+                step1: "Уравняй количество знаков после запятой, приписав нули к одной из дробей.",
+                step2: "Запиши дроби в столбик так, чтобы запятая оказалась под запятой, единицы под единицами.",
+                step3: "Выполни действие, не обращая внимания на запятую. В ответе поставь запятую строго под запятыми.",
+                mathMLTitle: "Нативная структура MathML:",
+                labTitle: "3. Интерактивная лаборатория (Визуальная модель)",
+                labDesc: "Передвигайте ползунки, чтобы увидеть, как сумма двух дробей отображается геометрически на стоклеточном квадрате.",
+                labelA: "Первое число (A):",
+                labelB: "Второе число (B):",
+                examplesTitle: "4. Примеры вычислений в столбик",
+                examplesDesc: "Обратите внимание на важность дописывания нулей:",
+                ex1Title: "Пример 1: Сложение (5.2 + 1.48)",
+                ex1Desc: "Дописываем ноль к 5.2, получаем 5.20:",
+                ex2Title: "Пример 2: Вычитание (7 - 2.35)",
+                ex2Desc: "Представляем целое число 7 как 7.00:",
+                pitfallTitle: "⚠️ Частая ошибка (Ловушка!)",
+                pitfallText: "КАТЕГОРИЧЕСКИ нельзя складывать без уравнивания знаков. Например, сложить 2.3 + 0.12 и получить 2.35 — это ошибка. Правильно: 2.30 + 0.12 = 2.42.",
+                quizTitle: "5. Интерактивный тренажер (10 заданий)",
+                quizDesc: "Вводите ответы в виде десятичной дроби. Поддерживаются и точки, и запятые.",
+                quizCheck: "Проверить",
+                correct: "Правильно! Отлично! 🎉",
+                incorrect: "Ошибка. Попробуй еще раз. 💡 Нажми на знак вопроса для подсказки.",
+                summaryTitle: "6. Резюме",
+                summaryItems: [
+                    "При сложении и вычитании главное — располагать запятую строго под запятой.",
+                    "Если в дробных частях разное количество цифр, уравниваем их нулями на конце.",
+                    "У целого числа запятая всегда подразумевается в самом конце (7 = 7.00)."
+                ],
+                questions: [
+                    { q: "1) Вычислите: 0.3 + 0.4", a: ["0.7", "0,7"], h: "Сложи, не глядя на запятые: 3 + 4 = 7, затем верни запятую." },
+                    { q: "2) Вычислите: 1.2 + 0.35", a: ["1.55", "1,55"], h: "Представь 1.2 как 1.20." },
+                    { q: "3) Вычислите: 5.7 - 2.3", a: ["3.4", "3,4"], h: "Из 7 вычти 3, из 5 вычти 2." },
+                    { q: "4) Вычислите: 4 - 1.5", a: ["2.5", "2,5"], h: "Запиши 4 как 4.0 и вычти 1.5." },
+                    { q: "5) Вычислите: 0.85 - 0.2", a: ["0.65", "0,65"], h: "Преврати 0.2 в 0.20." },
+                    { q: "6) Шоппинг: Тетрадь стоит 120.5 тенге, ручка 45.25 тенге. Сколько всего?", a: ["165.75", "165,75"], h: "Посчитай сумму 120.50 + 45.25." },
+                    { q: "7) Рост: Рост Алии 1.35 м, а братишка ниже ее на 0.12 м. Какой рост братишки?", a: ["1.23", "1,23"], h: "Выполни вычитание: 1.35 - 0.12" },
+                    { q: "8) Вычислите: 10 + 2.56", a: ["12.56", "12,56"], h: "Представь 10 как 10.00." },
+                    { q: "9) Вычислите: 0.03 + 0.17", a: ["0.2", "0,2", "0.20", "0,20"], h: "3 + 17 = 20, ноль на конце можно отбросить." },
+                    { q: "10) Логика: Из задуманного числа вычли 1.5 и получили 3.5. Какое число задумали?", a: ["5", "5.0", "5,0"], h: "Используй обратное действие: к 3.5 прибавь 1.5." }
+                ]
+            }
+        };
+
+        let currentLang = 'kk';
+
+        // ИНИЦИАЛИЗАЦИЯ И ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА
+        function switchLang(lang) {
+            currentLang = lang;
+            document.getElementById('btn-kk').classList.toggle('btn--active', lang === 'kk');
+            document.getElementById('btn-ru').classList.toggle('btn--active', lang === 'ru');
+
+            // Перевод статичных элементов
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    elem.innerText = translations[lang][key];
+                }
+            });
+
+            // Обновление резюме
+            const summaryList = document.getElementById('summary-list');
+            summaryList.innerHTML = '';
+            translations[lang].summaryItems.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = item;
+                summaryList.appendChild(li);
+            });
+
+            // Регенерация тренажера под нужный язык
+            renderQuiz();
+            updateLab();
+        }
+
+        // ДИНАМИЧЕСКИЙ SVG ДЛЯ ЛАБОРАТОРИИ
+        const sliderA = document.getElementById('sliderA');
+        const sliderB = document.getElementById('sliderB');
+        const valA = document.getElementById('valA');
+        const valB = document.getElementById('valB');
+        const mathSvg = document.getElementById('mathSvg');
+        const equationText = document.getElementById('equationText');
+
+        function updateLab() {
+            const a = parseFloat(sliderA.value);
+            const b = parseFloat(sliderB.value);
+            valA.innerText = a.toFixed(1);
+            valB.innerText = b.toFixed(1);
+
+            const sum = a + b;
+            equationText.innerText = `${a.toFixed(1)} + ${b.toFixed(1)} = ${sum.toFixed(1)}`;
+
+            // Очистка и перерисовка SVG (модель из 10 полосок для наглядности 5 классу)
+            mathSvg.innerHTML = '';
+            
+            // Рисуем полоски для числа А (Синие)
+            const countA = Math.round(a * 10);
+            for(let i = 0; i < countA; i++) {
+                let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute("x", i * 25 + 10);
+                rect.setAttribute("y", 20);
+                rect.setAttribute("width", 20);
+                rect.setAttribute("height", 40);
+                rect.setAttribute("fill", "#0ea5e9");
+                mathSvg.appendChild(rect);
+            }
+
+            // Рисуем полоски для числа B (Оранжевые/Зеленые)
+            const countB = Math.round(b * 10);
+            for(let i = 0; i < countB; i++) {
+                let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute("x", (countA + i) * 25 + 10);
+                rect.setAttribute("y", 20);
+                rect.setAttribute("width", 20);
+                rect.setAttribute("height", 40);
+                rect.setAttribute("fill", "#10b981");
+                mathSvg.appendChild(rect);
+            }
+
+            // Контур общей шкалы до 1.0 (10 ячеек)
+            for(let i=0; i<10; i++) {
+                let cell = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                cell.setAttribute("x", i * 25 + 10);
+                cell.setAttribute("y", 20);
+                cell.setAttribute("width", 20);
+                cell.setAttribute("height", 40);
+                cell.setAttribute("fill", "none");
+                cell.setAttribute("stroke", "#cbd5e1");
+                mathSvg.appendChild(cell);
+            }
+        }
+
+        sliderA.addEventListener('input', updateLab);
+        sliderB.addEventListener('input', updateLab);
+
+        // РЕНДЕРИНГ ТРЕНАЖЕРА (10 ЗАДАЧ)
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            translations[currentLang].questions.forEach((qObj, index) => {
+                const item = document.createElement('div');
+                item.className = 'quiz-item';
+
+                const qText = document.createElement('div');
+                qText.className = 'quiz-question';
+                qText.innerText = qObj.q;
+                item.appendChild(qText);
+
+                const control = document.createElement('div');
+                control.className = 'quiz-control';
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'input-answer';
+                input.id = `q-${index}`;
+                control.appendChild(input);
+
+                const checkBtn = document.createElement('button');
+                checkBtn.className = 'btn btn--primary';
+                checkBtn.innerText = translations[currentLang].quizCheck;
+                checkBtn.onclick = () => checkAnswer(index, qObj.a);
+                control.appendChild(checkBtn);
+
+                const hintBtn = document.createElement('button');
+                hintBtn.className = 'btn';
+                hintBtn.innerText = '💡';
+                hintBtn.title = qObj.h;
+                hintBtn.onclick = () => alert(qObj.h);
+                control.appendChild(hintBtn);
+
+                item.appendChild(control);
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                feedback.id = `fb-${index}`;
+                item.appendChild(feedback);
+
+                container.appendChild(item);
+            });
+        }
+
+        // ПРОВЕРКА ОТВЕТОВ С УЧЕТОМ ПРОБЕЛОВ И ЗНАКОВ СЕПАРАЦИИ
+        function checkAnswer(index, validAnswers) {
+            const input = document.getElementById(`q-${index}`);
+            const feedback = document.getElementById(`fb-${index}`);
+            const userAnswer = input.value.trim().replace(/\s+/g, '');
+
+            if (validAnswers.includes(userAnswer)) {
+                feedback.innerText = translations[currentLang].correct;
+                feedback.className = 'feedback feedback--success';
+            } else {
+                feedback.innerText = translations[currentLang].incorrect;
+                feedback.className = 'feedback feedback--error';
+            }
+        }
+
+        // Запуск при старте страницы
+        window.onload = () => {
+            switchLang('kk');
+        };
+    </script>
+</body>
+</html>
